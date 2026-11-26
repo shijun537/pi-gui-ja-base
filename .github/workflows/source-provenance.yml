@@ -1,0 +1,39 @@
+name: Preserve upstream provenance
+
+on:
+  push:
+    branches: [main]
+    paths: [docs/development/source-origin.json]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: source-provenance
+  cancel-in-progress: false
+
+jobs:
+  attach-upstream:
+    if: github.repository == 'shijun537/pi-gui-ja-base'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Attach the verified upstream ancestor without replacing the source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          base=faf8edd6d7a7e3bf3c508d6f600a22d3821ac108
+          git fetch --no-tags https://github.com/minghinmatthewlam/pi-gui.git "$base"
+          if git merge-base --is-ancestor "$base" HEAD; then
+            echo "The verified upstream history is already present."
+            exit 0
+          fi
+          before=$(git rev-parse HEAD^{tree})
+          git config user.name 'Pi-GUI contributors'
+          git config user.email 'contributors@example.invalid'
+          git merge --no-ff --allow-unrelated-histories --strategy=ours "$base" -m 'Preserve verified upstream history for the development fork'
+          test "$before" = "$(git rev-parse HEAD^{tree})"
+          git push origin HEAD:refs/heads/main

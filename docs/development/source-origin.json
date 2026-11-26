@@ -1,0 +1,7 @@
+{
+  "upstream_repository": "https://github.com/minghinmatthewlam/pi-gui",
+  "upstream_commit": "faf8edd6d7a7e3bf3c508d6f600a22d3821ac108",
+  "publication_repository": "shijun537/pi-gui-ja-base",
+  "source_snapshot": "Current shared development fork; private prototype copies and local data excluded",
+  "history": "Local upstream history is preserved. The provenance workflow attaches this fixed public upstream commit as an additional ancestor without replacing the published source tree."
+}
