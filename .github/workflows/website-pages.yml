@@ -1,0 +1,76 @@
+name: Japanese introduction site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - apps/website/**
+      - docs/legal/**
+      - LICENSE
+      - pnpm-lock.yaml
+      - .github/workflows/website-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: japanese-introduction-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      pages_enabled: ${{ steps.pages.outputs.enabled }}
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @pi-gui/website typecheck
+      - run: pnpm --filter @pi-gui/website build
+      - run: node scripts/verify-website.mjs
+      - name: Package only the static website
+        run: tar --dereference --hard-dereference --directory apps/website/out -cf "$RUNNER_TEMP/artifact.tar" --exclude=.git --exclude=.github .
+      - uses: actions/upload-artifact@v7
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/artifact.tar
+          if-no-files-found: error
+          retention-days: 1
+      - name: Check whether Pages is configured
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if gh api "repos/$GITHUB_REPOSITORY/pages" > "$RUNNER_TEMP/pages.json" 2> "$RUNNER_TEMP/pages-error.txt"; then
+            echo 'enabled=true' >> "$GITHUB_OUTPUT"
+          else
+            if grep -q 'HTTP 404' "$RUNNER_TEMP/pages-error.txt"; then
+              echo 'enabled=false' >> "$GITHUB_OUTPUT"
+              echo 'Site built. Enable Settings > Pages > GitHub Actions, then rerun this workflow to publish.' >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo 'Could not confirm Pages configuration; this is not a successful deployment.' >&2
+              exit 1
+            fi
+          fi
+  deploy:
+    needs: build
+    if: needs.build.outputs.pages_enabled == 'true'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/deploy-pages@v5
+        id: deployment

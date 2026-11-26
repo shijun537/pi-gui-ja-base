@@ -1,0 +1,86 @@
+import { useTranslation } from "../../i18n";
+import type { RefObject } from "react";
+
+interface ThreadSearchBarProps {
+  readonly query: string;
+  readonly matchCount: number;
+  readonly activeIndex: number;
+  readonly inputRef: RefObject<HTMLInputElement | null>;
+  readonly onSearch: (query: string) => void;
+  readonly onNext: () => void;
+  readonly onPrev: () => void;
+  readonly onClose: () => void;
+}
+
+export function ThreadSearchBar({
+  query,
+  matchCount,
+  activeIndex,
+  inputRef,
+  onSearch,
+  onNext,
+  onPrev,
+  onClose,
+}: ThreadSearchBarProps) {
+  const { t } = useTranslation();
+  return (
+    <div className="thread-search-bar" data-testid="thread-search-bar">
+      <input
+        ref={inputRef}
+        className="thread-search-bar__input"
+        type="text"
+        placeholder={t("conversation.search")}
+        value={query}
+        onChange={(e) => onSearch(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (e.shiftKey) {
+              onPrev();
+            } else {
+              onNext();
+            }
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            onClose();
+          }
+        }}
+      />
+      <span className="thread-search-bar__count">
+        {query
+          ? matchCount > 0
+            ? `${activeIndex + 1} / ${matchCount}`
+            : t("conversation.searchNone")
+          : ""}
+      </span>
+      <div className="thread-search-bar__actions">
+        <button
+          aria-label={t("conversation.searchPrev")}
+          className="icon-button"
+          type="button"
+          disabled={matchCount === 0}
+          onClick={onPrev}
+        >
+          ▲
+        </button>
+        <button
+          aria-label={t("conversation.searchNext")}
+          className="icon-button"
+          type="button"
+          disabled={matchCount === 0}
+          onClick={onNext}
+        >
+          ▼
+        </button>
+        <button
+          aria-label={t("conversation.searchClose")}
+          className="icon-button"
+          type="button"
+          onClick={onClose}
+        >
+          ✕
+        </button>
+      </div>
+    </div>
+  );
+}
