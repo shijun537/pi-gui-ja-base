@@ -2,6 +2,12 @@
 
 更新日 2026-11-26。OSS のソース公開を最優先し、Windows x64 の正式配布は別の完了条件で進める。作業の再開時は、[このフォークの作業範囲](fork-boundaries.md) とルートの [AGENTS.md](../../AGENTS.md) を読み、`git status --short` で差分を確認する。検品・機能確認・依存更新の手順は [開発・検品の進め方](workflows.md) にまとめている。
 
+## OSS ソースの公開結果
+
+- 指定先 [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・引き継ぎ資料を反映した。公開候補875ファイルとの Git ツリー完全一致と上流履歴の保持を確認済み。元の main と未コミット差分は保持した。
+- 紹介ページは GitHub Actions でも固定依存導入・型検査・ビルド・5ページと内部参照104件の検査・静的成果物アップロードまで成功。Pages が未設定のため deploy は skipped。Web 公開とブラウザーでの表示確認は残る。[実行記録](website-publication-plan.md#公開先への反映結果)
+- アプリ全体の CI は別途実行中。以前停止した検証と担当別の残件は [一覧](validation-handoff.md) に維持し、[再開用プロンプト](validation-resume-prompt.md) を用意した。
+
 ## push に向けた今回の実行
 
 - [OSS 公開の計画と実行記録](oss-publication.md) を作成し、現在の共有ソースを基礎とする公開候補を別フォルダへ固定した。上流の履歴と元の main・未コミット差分を保持し、独立した試作コピーや生成物は含めていない。

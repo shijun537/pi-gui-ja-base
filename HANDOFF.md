@@ -10,6 +10,10 @@
 - [評価手順](docs/development/evaluation.md) から、GUI 性能や Pi の推論品質を単独で計測できる。
 - [次の枠での再開手順](docs/development/progress.md#次の枠での再開手順) に、再開時に確認する対象と残件を記録している。
 
+## 公開先の現在地
+
+利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・Pi 導入・検証再開プロンプトを反映済み。候補875ファイルとの Git ツリー一致と上流履歴を確認した。紹介ページの CI は成功したが Pages の deploy は skipped で、Web の配信は初期設定待ち。アプリ全体の CI は別途実行中。最新の結果は [公開記録](docs/development/oss-publication.md#公開先への反映結果) を確認する。
+
 ## 再開する作業
 
 - **2026-11-26 の利用者指示により OSS のソース公開を最優先する。** 公開対象の差分整理、ファイルと公開対象履歴の混入確認、再現手順と README の整備を先行する。未検証・既知の問題・試作だけの結果を明記し、Windows 正式配布の全残件をソース公開の前提にはしない。 [公開準備](docs/development/windows-release-plan.md#最優先oss-のソース公開) · [README](README.md)

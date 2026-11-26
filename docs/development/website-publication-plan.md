@@ -33,7 +33,7 @@
 
 ## 送信とサイト公開の方法
 
-通常の Git 通信が使えないため、指定先の空リポジトリを LICENSE から初期化し、GitHub 連携で必要なソースを送信する。公開上流の固定コミットを GitHub Actions で取得し、既存の公開ソースを変えない形で履歴へつなぐ手順も用意した。履歴の接続は workflow の成功と実際の祖先を確認してから完了とする。元のローカルの履歴と候補は保持する。
+通常の Git 通信が使えないため、指定先の空リポジトリを LICENSE から初期化し、GitHub 連携で必要なソースを送信する。公開上流の固定コミットを GitHub Actions で取得し、既存の公開ソースを変えない形で履歴へつなぐ手順も用意した。履歴接続の workflow は成功し、上流の基準コミットが祖先であることも確認済み。元のローカルの履歴と候補は保持する。
 
 紹介ページは GitHub Pages 用の静的出力を生成する。`website-pages.yml` はサイトをビルド・検査して静的ファイルだけをアップロードし、Pages が設定済みなら公開する。未設定の場合は「ビルド済み・公開待ち」と記録する。新しい認証トークンは作らず、Pages の設定を確認できない状態を公開成功とは扱わない。
 
@@ -46,3 +46,15 @@ Pages の初回設定が必要な場合は、リポジトリの Settings → Pag
 - [個人情報保護委員会の公表事項に関する案内](https://www.ppc.go.jp/all_fad_index/fad2-5-1-q3/)
 - [GitHub Pages のデータ取得](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection)
 - [GitHub Pages の公開元の設定](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
+
+## 公開先への反映結果
+
+2026-11-26、利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main へ [ソース一式](https://github.com/shijun537/pi-gui-ja-base/commit/969a1ca9b07ae2fbdfa4a4bb71a4056c0460231e) を反映した。公開候補875ファイルを作業元と照合し、不一致0件。GitHub 上の Git ツリーがローカル候補と完全一致することを取得後に確認した。上流の基準コミットが祖先として残り、既存の公開履歴は書き換えていない。Pi 本体・ロックファイル・共有設定は変更していない。元の作業ツリーの main と未コミット差分も保持している。
+
+[紹介ページの CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753638140) は、新規の固定依存導入、型検査、静的ビルド、5ページと内部参照104件、Web/Markdown の利用案内一致、静的成果物のアップロードまで成功した。ローカルの94件とはビルド成果物の参照数が異なるため、各実行の値を分けて記録する。
+
+Pages の設定確認後、deploy は skipped となった。**紹介ページのソースは公開済み、Web サイトの配信は設定待ち。** 接続中の GitHub ツールには Pages 設定の変更機能がなく、ブラウザー制御も接続できないため、この作業から初期設定は完了できていない。[Settings → Pages](https://github.com/shijun537/pi-gui-ja-base/settings/pages) で Source を GitHub Actions にし、Japanese introduction site の workflow を再実行する。設定後の公開 URL と表示確認は引き続き必要。
+
+GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashfs が終了コード1で停止しました。ログには basename と同梱ライブラリの GLIBC_2.43・GLIBC_2.29・GLIBC_2.39 不足が出ています。ホスト環境と配布補助ツールの組み合わせを切り分ける必要があり、Linux 配布の成功は確認できていません。
+
+アプリ全体は [GitHub CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314) が別途実行中。紹介ページの成功をアプリ全体・Windows 正式配布の合格とは扱わない。既存の検証停止箇所は [引き継ぎ一覧](validation-handoff.md)、再開は [貼り付け用プロンプト](validation-resume-prompt.md) を使う。
