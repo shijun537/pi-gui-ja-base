@@ -8,7 +8,11 @@ Pi `1.4.0` と Electron `37.10.3` を固定した共有ソースが対象。別�
 
 既存の Windows 環境で、デスクトップのビルド、Pi 連携251件、カタログ31件、拡張 UI 9件、翻訳関連9件、修正対象の共通6試験が成功した。書式・lint・型・境界・混入検査にも成功記録がある。全体検査や今回の実 Electron が成功したという意味ではない。
 
-## 現在の到達点
+## 最終の確認
+
+[通知順序修正後の全体CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754837) と [macOS実Electronの拡張リンク単体](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754821) が成功した。下記の診断失敗は修正前の記録として残す。現在の残件は [担当別計画](remaining-work-allocation.md) を参照する。[公開サイト5ページのHTTPS確認](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45800440251) も成功し、ブラウザー視覚確認とは区別している。
+
+## 修正前の到達点（履歴）
 
 [AppImage修正後のCI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) は、Ubuntu baseline、macOS Core全4分割と集約、Windows directory包装、Linux AppImage・debと既存の配布検査、website-build、CI requiredがすべて成功した。以前のローカル中断やCI失敗は履歴として残し、同じ環境の再実行結果とは扱わない。
 

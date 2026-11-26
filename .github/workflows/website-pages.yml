@@ -91,3 +91,7 @@ jobs:
             esac
             echo "Published ${route:-home}: verified"
           done
+          curl --disable --fail --silent --show-error --location --proto '=https' --max-time 30 "$site/licenses/geist-OFL.txt" -o "$RUNNER_TEMP/published-font-license.txt"
+          grep -Fq 'SIL OPEN FONT LICENSE Version 1.1' "$RUNNER_TEMP/published-font-license.txt"
+          grep -Fq 'Copyright (c) 2023 Vercel' "$RUNNER_TEMP/published-font-license.txt"
+          echo 'Published font license: verified'

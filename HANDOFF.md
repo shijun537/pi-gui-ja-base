@@ -20,7 +20,7 @@
 
 紹介サイトは [Pages のデプロイ](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269312) が成功し、[公開 URL](https://shijun537.github.io/pi-gui-ja-base/) が発行された。ブラウザー接続は使えず、実表示・モバイル操作は未確認。公開後の5ページをHTTPで確認する処理を追加した。
 
-AppImageの公式修正版ツールセットとchecksumを固定し、PiとElectronの版は維持。[修正込みCI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) は全ジョブ成功。一方、[拡張リンクの単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269461) は成功通知待ちが失敗しており、既知の課題として継続する。公開後のHTTP確認とブラウザー実表示も別々に記録する。
+AppImageの配布補助と拡張リンクの通知順序を修正し、PiとElectronの版は維持。[実装変更後の全体CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754837) と [macOS実Electron単体](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754821) が成功した。紹介サイトの [公開後5ページのHTTPS本文確認](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45800440251) も成功。ブラウザーの視覚・モバイル・コピー操作は未確認。残作業は [担当一覧](docs/development/remaining-work-allocation.md) を参照する。
 
 ## 再開する作業
 

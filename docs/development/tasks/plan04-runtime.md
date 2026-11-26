@@ -36,6 +36,10 @@ Windows が試験用ウィンドウステーションの作成を拒否したた
 
 次の最小確認は、候補だけを適用した専用 Linux 環境で `pnpm install --frozen-lockfile`、`pnpm verify:release-config`、`pnpm --filter @pi-gui/desktop run package:linux` を実行すること。続けて既存の同梱依存検査、AppImage/deb の展開・導入・削除検証、候補 staging を実施する。GLIBC エラーが消えたことだけで包装全体の成功にしない。通常の `pnpm check` と必要な CI ジョブも維持する。
 
+## 最終の修正結果
+
+AppImage修正と拡張リンクの通知順序修正を含む [全体CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754837) が成功。[macOSの実Electron単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754821) も1件成功。フレームの受信確認後に下書き保存とスレッド切り替えを開始する実装へ変更した。元のassert・timeoutを維持し、同時上限・確認の分離・破棄を単体試験で検証した。以前の失敗と原因調査は以下に履歴として残す。Windowsの実Ctrl+VとElectron44採否は別の未完了項目である。
+
 ## 統合後の結果
 
 親が公式AppImageツールセット1.0.3の固定版とchecksum、lock hash更新を共有ソースへ取り込んだ。[修正込みCI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) はLinux包装を含め全ジョブ成功。以前のGLIBC停止とは区別する。Pi1.4.0とElectron37.10.3は維持した。

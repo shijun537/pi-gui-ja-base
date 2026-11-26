@@ -2,6 +2,10 @@
 
 2026-11-26。公開先は利用者指定の `pi-gui-ja-base`。既存の未検証箇所は記録を残したまま、開発中のソースとして公開する指示を受けた。今回の依頼は紹介ページ、必要な利用案内、再開用プロンプトの整備と push を含む。別の公開承認は追加しない。
 
+## 公開後の確認結果
+
+[公開後の検査](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45800440251) はbuild、deploy、5ページのHTTPS取得と日本語・本文照合がすべて成功。[紹介サイト](https://shijun537.github.io/pi-gui-ja-base/) の配信を確認した。ブラウザー接続は再確認しても利用できず、視覚・モバイル操作・コピー操作は未確認。最終更新は検証結果の文面で、サイトの構造やスクリプトは変えていない。
+
 ## 最新の公開結果
 
 2026-11-26、リポジトリAPIでPages有効化を確認し、紹介ページ更新をpushして公開処理を再実行した。[buildとdeployの両方が成功](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269312) し、デプロイログで [公開 URL](https://shijun537.github.io/pi-gui-ja-base/) を確認した。以前のdeploy skippedは初回の結果であり、現在の未設定を示すものではない。
@@ -66,3 +70,7 @@ GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashf
 初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。
 
 アプリ全体は [GitHub CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314) が別途実行中。紹介ページの成功をアプリ全体・Windows 正式配布の合格とは扱わない。既存の検証停止箇所は [引き継ぎ一覧](validation-handoff.md)、再開は [貼り付け用プロンプト](validation-resume-prompt.md) を使う。
+
+## 同梱フォントの通知
+
+最終の同梱確認で、固定依存 geist 1.7.2 のフォント著作権表示とOFL原文を静的サイトへコピーした。インストール済み固定依存の原文と公式配布元の原文の一致を確認した。ライセンスページとMarkdownの案内をそろえ、公開後のHTTPS確認にも原文の取得と本文照合を追加した。フォントや依存の版は変更していない。

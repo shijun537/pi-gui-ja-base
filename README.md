@@ -75,7 +75,7 @@
 
 2026年11月26日の制限付き Windows 環境では、既存の依存関係を使ったデスクトップのビルドが成功しました。全体検査では試験用リンクの作成が拒否され、新しいフォルダへの依存関係の導入も同じ制約で停止しました。チャットと Windows メニューの再試験は、Electron が起動前に終了したため確認できていません。起動失敗の原因は未確定です。
 
-AppImage 修正後の GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、Windows のディレクトリ形式パッケージと同梱依存、macOS Core の全4分割と集約、Linux の AppImage・deb と既存の配布検査がすべて成功しました。一方、別実行の拡張リンク単体診断では、スレッド表示切替後の成功通知待ちが失敗しています。全体 CI の成功だけでこの不安定な挙動を解決済みとはしていません。正式な Windows 配布、実クリップボード、実マイクの待ち時間などの残検証も別に管理しています。 [修正後の CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) · [未解決の単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269461)
+AppImage の配布補助と、拡張画面からスレッドを開くときの通知順序を修正しました。修正後は Ubuntu の pnpm check、macOS Core 全4分割、Windows・Linux の既存配布検査を含む全体 CI が成功しています。以前失敗した拡張リンクの単体診断も、macOS の実 Electron と合成データで成功しました。Windows の実クリップボード、実マイク待ち時間、キー保護の製品統合、正式配布候補の完全なアンインストールなどは担当別の残検証です。 [修正後の CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754837) · [実 Electron の単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45801754821)
 
 以前の Linux CI では、AppImage 作成時に同梱ライブラリと basename の GLIBC 不整合で停止しました。公式の修正版ツールセットとチェックサムを固定する最小変更後は、AppImage・deb 作成、同梱依存、既存の Linux 配布検査まで成功しています。Pi と Electron の版は変更していません。
 
