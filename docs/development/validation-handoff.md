@@ -8,6 +8,14 @@ Pi `1.4.0` と Electron `37.10.3` を固定した共有ソースが対象。別�
 
 既存の Windows 環境で、デスクトップのビルド、Pi 連携251件、カタログ31件、拡張 UI 9件、翻訳関連9件、修正対象の共通6試験が成功した。書式・lint・型・境界・混入検査にも成功記録がある。全体検査や今回の実 Electron が成功したという意味ではない。
 
+## 現在の到達点
+
+[AppImage修正後のCI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) は、Ubuntu baseline、macOS Core全4分割と集約、Windows directory包装、Linux AppImage・debと既存の配布検査、website-build、CI requiredがすべて成功した。以前のローカル中断やCI失敗は履歴として残し、同じ環境の再実行結果とは扱わない。
+
+[追加の拡張リンク単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269461) は、スレッド表示切替後の成功通知待ちが失敗した。全体CIの成功で解決済みとしない。次の担当はtraceと固定ラベルの時系列を取り、製品の終了順序とfixtureの観測を切り分ける。待ち時間延長・skip・単なる再実行で解決扱いにしない。
+
+担当別の次の作業と実行条件は [割り振り](remaining-work-allocation.md) と01〜06の文書を使う。
+
 ## 公開後の GitHub CI
 
 [最初の公開ソースの CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314) はローカル検証と区別する。紹介ページは固定依存の新規導入・型検査・ビルド・内部参照検査まで成功。Linux 配布は AppImage の作成で停止した。GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashfs が終了コード1で停止しました。ログには basename と同梱ライブラリの GLIBC_2.43・GLIBC_2.29・GLIBC_2.39 不足が出ています。ホスト環境と配布補助ツールの組み合わせを切り分ける必要があり、Linux 配布の成功は確認できていません。 次の担当は CI の desktop-package-linux のログを取得し、electron-builder が取得した AppImage ツールとホストの basename のライブラリ解決を最小条件で確認する。Pi の版変更、保護設定変更、検査のスキップで回避しない。

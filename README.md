@@ -8,6 +8,8 @@
 
 上流版の Releases と公式サイトは、上流版の案内です。このフォークの追加機能を含む配布先ではありません。Windows 配布アプリの正式名、識別子、署名方式は未決定です。
 
+紹介サイトは [こちら](https://shijun537.github.io/pi-gui-ja-base/) です。
+
 紹介ページのソースは [apps/website](apps/website) にあります。日本語UIと改造の入口を重視する方針、確認済みの機能、未完了の検証を掲載しています。他のGUIにない機能だと断定するものではありません。Web への公開状態は [紹介ページの実行記録](docs/development/website-publication-plan.md) を参照してください。
 
 [利用条件・免責](docs/legal/terms.md) · [プライバシー](docs/legal/privacy.md) · [ライセンス・謝辞](docs/legal/licenses.md) · [セキュリティ](SECURITY.md) · [サポート](docs/support.md) · [検証の引き継ぎ](docs/development/validation-handoff.md)
@@ -73,9 +75,9 @@
 
 2026年11月26日の制限付き Windows 環境では、既存の依存関係を使ったデスクトップのビルドが成功しました。全体検査では試験用リンクの作成が拒否され、新しいフォルダへの依存関係の導入も同じ制約で停止しました。チャットと Windows メニューの再試験は、Electron が起動前に終了したため確認できていません。起動失敗の原因は未確定です。
 
-GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査、Windows のディレクトリ形式パッケージと同梱依存検査が成功しました。macOS Core は直前の実行で全4分割が成功しましたが、スクリーンショット追加後の実行では拡張画面からスレッドを開く試験1件が失敗し、原因を調査中です。Linux AppImage も作成に失敗しており、全体の CI は未合格です。ローカル Windows の制約とは別の結果で、正式配布や Windows の実クリップボードの合格を示すものではありません。
+AppImage 修正後の GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、Windows のディレクトリ形式パッケージと同梱依存、macOS Core の全4分割と集約、Linux の AppImage・deb と既存の配布検査がすべて成功しました。一方、別実行の拡張リンク単体診断では、スレッド表示切替後の成功通知待ちが失敗しています。全体 CI の成功だけでこの不安定な挙動を解決済みとはしていません。正式な Windows 配布、実クリップボード、実マイクの待ち時間などの残検証も別に管理しています。 [修正後の CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) · [未解決の単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269461)
 
-GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashfs が終了コード1で停止しました。ログには basename と同梱ライブラリの GLIBC_2.43・GLIBC_2.29・GLIBC_2.39 不足が出ています。ホスト環境と配布補助ツールの組み合わせを切り分ける必要があり、Linux 配布の成功は確認できていません。 [CI の記録](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314)
+以前の Linux CI では、AppImage 作成時に同梱ライブラリと basename の GLIBC 不整合で停止しました。公式の修正版ツールセットとチェックサムを固定する最小変更後は、AppImage・deb 作成、同梱依存、既存の Linux 配布検査まで成功しています。Pi と Electron の版は変更していません。
 
 これらを成功済みの検証には数えていません。過去の成功記録と今回の結果を区別し、新規環境での導入完了や今回の実アプリ確認を保証しない開発中のソースとして扱います。個別の結果と再開手順は [公開準備の実行記録](docs/development/oss-publication.md) を参照してください。
 
@@ -117,6 +119,10 @@ node apps/desktop/scripts/build-whisper-windows.mjs
 ```
 
 Vulkan 版をビルドする場合は、先に `VULKAN_SDK` と `PI_APP_BUILD_WHISPER_VULKAN=1` を設定します。CPU 版は AVX2 対応が前提です。GPU と必要メモリの最低条件は未確定です。
+
+## 残作業と担当別の再開
+
+[担当01〜06の実行計画](docs/development/remaining-work-allocation.md) に、依存関係、今回の追加検証、次の着手条件をまとめています。各担当の文書には、そのまま渡せる再開プロンプトがあります。未確認の試作を製品実装や正式配布の合格として扱っていません。
 
 ## 開発と検証
 

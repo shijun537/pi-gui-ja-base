@@ -74,3 +74,20 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v5
         id: deployment
+      - name: Verify the five published Japanese pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          site='https://shijun537.github.io/pi-gui-ja-base'
+          for route in '' terms privacy licenses status; do
+            page="$RUNNER_TEMP/published-${route:-home}.html"
+            curl --disable --fail --silent --show-error --location --proto '=https' --max-time 30 "$site/${route:+$route/}" -o "$page"
+            grep -Fq 'lang="ja"' "$page"
+            case "$route" in
+              privacy) grep -Fq 'IP アドレス' "$page" ;;
+              licenses) grep -Fq 'THE SOFTWARE IS PROVIDED' "$page" ;;
+              terms) grep -Fq '追加の制限を課すものではありません' "$page" ;;
+              status) grep -Fq '検証状況' "$page" ;;
+            esac
+            echo "Published ${route:-home}: verified"
+          done

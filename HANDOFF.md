@@ -10,9 +10,17 @@
 - [評価手順](docs/development/evaluation.md) から、GUI 性能や Pi の推論品質を単独で計測できる。
 - [次の枠での再開手順](docs/development/progress.md#次の枠での再開手順) に、再開時に確認する対象と残件を記録している。
 
+## 残作業の担当と再開
+
+利用者の後続指示により、独立作業を01〜06へ分担して実行した。既存担当チャットへのアプリ接続は失敗し、再開送信を確認できないため、この調整作業内の並列担当で進めた。既存チャットを実行済みとは扱わず保持する。[担当・依存・実行順](docs/development/remaining-work-allocation.md) と各担当の再開プロンプトを使い、進行中の同じ作業を重複して始めない。
+
 ## 公開先の現在地
 
-利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・Pi 導入・検証再開プロンプトを反映済み。候補875ファイルとの Git ツリー一致と上流履歴を確認した。紹介ページの CI は成功したが Pages の deploy は skipped で、Web の配信は初期設定待ち。初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。 アプリ全体の CI は別途実行中。最新の結果は [公開記録](docs/development/oss-publication.md#公開先への反映結果) を確認する。
+利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・Pi 導入・スクリーンショットを反映済み。候補の Git ツリー一致と上流履歴を確認した。
+
+紹介サイトは [Pages のデプロイ](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269312) が成功し、[公開 URL](https://shijun537.github.io/pi-gui-ja-base/) が発行された。ブラウザー接続は使えず、実表示・モバイル操作は未確認。公開後の5ページをHTTPで確認する処理を追加した。
+
+AppImageの公式修正版ツールセットとchecksumを固定し、PiとElectronの版は維持。[修正込みCI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269282) は全ジョブ成功。一方、[拡張リンクの単体診断](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45758269461) は成功通知待ちが失敗しており、既知の課題として継続する。公開後のHTTP確認とブラウザー実表示も別々に記録する。
 
 ## 再開する作業
 
