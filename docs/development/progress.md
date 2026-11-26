@@ -6,6 +6,7 @@
 
 - 指定先 [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・引き継ぎ資料を反映した。公開候補875ファイルとの Git ツリー完全一致と上流履歴の保持を確認済み。元の main と未コミット差分は保持した。
 - 紹介ページは GitHub Actions でも固定依存導入・型検査・ビルド・5ページと内部参照104件の検査・静的成果物アップロードまで成功。Pages が未設定のため deploy は skipped。Web 公開とブラウザーでの表示確認は残る。[実行記録](website-publication-plan.md#公開先への反映結果)
+- 初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。
 - アプリ全体の CI は別途実行中。以前停止した検証と担当別の残件は [一覧](validation-handoff.md) に維持し、[再開用プロンプト](validation-resume-prompt.md) を用意した。
 
 ## push に向けた今回の実行

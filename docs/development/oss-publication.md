@@ -104,4 +104,6 @@ Pages の設定確認後、deploy は skipped となった。**紹介ページ�
 
 GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashfs が終了コード1で停止しました。ログには basename と同梱ライブラリの GLIBC_2.43・GLIBC_2.29・GLIBC_2.39 不足が出ています。ホスト環境と配布補助ツールの組み合わせを切り分ける必要があり、Linux 配布の成功は確認できていません。
 
+初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。
+
 アプリ全体は [GitHub CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314) が別途実行中。紹介ページの成功をアプリ全体・Windows 正式配布の合格とは扱わない。既存の検証停止箇所は [引き継ぎ一覧](validation-handoff.md)、再開は [貼り付け用プロンプト](validation-resume-prompt.md) を使う。

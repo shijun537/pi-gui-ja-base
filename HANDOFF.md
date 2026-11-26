@@ -12,7 +12,7 @@
 
 ## 公開先の現在地
 
-利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・Pi 導入・検証再開プロンプトを反映済み。候補875ファイルとの Git ツリー一致と上流履歴を確認した。紹介ページの CI は成功したが Pages の deploy は skipped で、Web の配信は初期設定待ち。アプリ全体の CI は別途実行中。最新の結果は [公開記録](docs/development/oss-publication.md#公開先への反映結果) を確認する。
+利用者指定の [pi-gui-ja-base](https://github.com/shijun537/pi-gui-ja-base) の main にソース・紹介ページ・利用案内・Pi 導入・検証再開プロンプトを反映済み。候補875ファイルとの Git ツリー一致と上流履歴を確認した。紹介ページの CI は成功したが Pages の deploy は skipped で、Web の配信は初期設定待ち。初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。 アプリ全体の CI は別途実行中。最新の結果は [公開記録](docs/development/oss-publication.md#公開先への反映結果) を確認する。
 
 ## 再開する作業
 

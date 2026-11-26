@@ -12,7 +12,7 @@ Pi `1.4.0` と Electron `37.10.3` を固定した共有ソースが対象。別�
 
 [最初の公開ソースの CI](https://github.com/shijun537/pi-gui-ja-base/actions/runs/45753637314) はローカル検証と区別する。紹介ページは固定依存の新規導入・型検査・ビルド・内部参照検査まで成功。Linux 配布は AppImage の作成で停止した。GitHub Actions の Linux 配布ビルドでは、AppImage 作成中に mksquashfs が終了コード1で停止しました。ログには basename と同梱ライブラリの GLIBC_2.43・GLIBC_2.29・GLIBC_2.39 不足が出ています。ホスト環境と配布補助ツールの組み合わせを切り分ける必要があり、Linux 配布の成功は確認できていません。 次の担当は CI の desktop-package-linux のログを取得し、electron-builder が取得した AppImage ツールとホストの basename のライブラリ解決を最小条件で確認する。Pi の版変更、保護設定変更、検査のスキップで回避しない。
 
-アプリ全体のその他のジョブは別途進行中で、合格と記録しない。Pages の deploy は設定不足で skipped。初期設定とブラウザー実表示の確認も残る。
+初回公開ソースに対する GitHub CI では、Ubuntu の新規固定依存導入と pnpm check、導入案内・開発ランチャー・版整合性・配布設定の検査が成功しました。Windows のディレクトリ形式パッケージ作成と同梱ランタイム依存の検査も成功しました。制限付きローカル Windows の失敗とは別環境の結果です。macOS の Core と CI 全体の最終合格、選択ありのアンインストールや実クリップボードの確認を兼ねるものではありません。 記録時点で macOS Core は実行中で、全体の合格とは記録しない。Pages の deploy は設定不足で skipped。初期設定とブラウザー実表示の確認も残る。
 
 ## 中断・失敗の一覧
 
