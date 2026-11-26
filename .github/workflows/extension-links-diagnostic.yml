@@ -1,0 +1,42 @@
+name: Extension links diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/extension-links-diagnostic.yml
+
+permissions:
+  contents: read
+
+jobs:
+  extension-links:
+    runs-on: macos-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @pi-gui/desktop run build
+      - name: Capture the extension navigation result without retries
+        env:
+          PI_APP_TEST_LANE: core
+          PI_APP_REAL_AUTH: "0"
+          PI_APP_TEST_MODE: background
+          PLAYWRIGHT_JSON_OUTPUT_NAME: ${{ github.workspace }}/apps/desktop/test-results/extension-links-report.json
+        run: pnpm exec playwright test -c apps/desktop/playwright.config.ts apps/desktop/tests/core/extension-view-links.spec.ts --trace on --reporter=line,json
+      - name: Retain the trace and result for diagnosis
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: extension-links-diagnostic
+          path: apps/desktop/test-results/
+          retention-days: 7
+          if-no-files-found: warn

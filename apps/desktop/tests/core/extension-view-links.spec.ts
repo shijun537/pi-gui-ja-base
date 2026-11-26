@@ -36,6 +36,7 @@ export default function extension(pi) {
   await writeFile(
     join(extension, "dist", "desktop.js"),
     `export function mount(root, host) {
+  host.signal.addEventListener("abort", () => console.log("plan04 view abort"), { once: true });
   const error = document.createElement("p");
   error.setAttribute("role", "status");
   const run = (promise) => {
@@ -54,7 +55,10 @@ export default function extension(pi) {
   button("Open plain link", () => run(host.actions.openUrl("http://example.com")));
   root.append(thread);
   button("Open thread", () =>
-    run(host.actions.openThread(thread.value).then(() => console.log("view saw thread open"))),
+    run((console.log("plan04 thread request"), host.actions.openThread(thread.value)).then(
+      () => console.log("view saw thread open"),
+      (reason) => { console.log("plan04 thread rejected"); throw reason; },
+    )),
   );
   root.append(error);
   return () => {};
@@ -71,8 +75,17 @@ test("an extension view opens https links and threads beside its own", async () 
     initialWorkspaces: [otherFolder, workspacePath],
     testMode: "background",
   });
+  const plan04Events: { event: string; at: number }[] = [];
   try {
     const window = await harness.firstWindow();
+    window.on("console", (message) => {
+      const event = message.text();
+      if (event.startsWith("plan04 ") || event === "view saw thread open")
+        plan04Events.push({ event, at: Date.now() });
+    });
+    window.on("framedetached", () =>
+      plan04Events.push({ event: "frame detached", at: Date.now() }),
+    );
     await harness.electronApp.evaluate(({ shell }) => {
       const globals = globalThis as typeof globalThis & { __openedLinks?: string[] };
       globals.__openedLinks = [];
@@ -140,6 +153,10 @@ test("an extension view opens https links and threads beside its own", async () 
     await card.getByRole("button", { name: /Open related thread/ }).click();
     await expect(window.locator(".chat-header__title")).toHaveText("Current thread");
   } finally {
+    await test.info().attach("plan04-view-action-order", {
+      body: JSON.stringify(plan04Events, null, 2),
+      contentType: "application/json",
+    });
     await harness.close();
   }
 });

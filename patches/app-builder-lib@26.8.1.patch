@@ -47,3 +47,18 @@ index c345dee7a888323198897dbab393bd167aedd9b8..bea7c4dafcbba9771fbdca58d0998ea5
 +      Pop $1
        StrCpy $INSTDIR "$0\${APP_FILENAME}"
      ${endif}
+diff --git a/out/toolsets/linux.js b/out/toolsets/linux.js
+--- a/out/toolsets/linux.js
++++ b/out/toolsets/linux.js
+@@ -61,9 +61,9 @@ async function getAppImageTools(targetArch) {
+     const artifactPath = override ||
+         (await (0, binDownload_1.downloadArtifact)({
+-            releaseName: "appimage@1.0.2",
++            releaseName: "appimage@1.0.3",
+             filenameWithExt: "appimage-tools-runtime-20251108.tar.gz",
+             checksums: {
+-                "appimage-tools-runtime-20251108.tar.gz": "a784a8c26331ec2e945c23d6bdb14af5c9df27f5939825d84b8709c61dc81eb0",
++                "appimage-tools-runtime-20251108.tar.gz": "84021a78ee214ae6fd33a2d62a92ba25542dd10bc86bf117a9b2d0bba44e7665",
+             },
+             githubOrgRepo: "electron-userland/electron-builder-binaries",
+         }));
