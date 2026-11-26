@@ -410,3 +410,104 @@ test("a replacement declaration can reuse the ID of a removed pending activation
     await rm(data.directory, { recursive: true, force: true });
   }
 });
+
+test("thread navigation waits for its own live frame to acknowledge the action result", async () => {
+  const data = await fixture();
+  const completed: string[] = [];
+  const owner = new DesktopExtensionViewOwner({
+    frameDocument: () => "",
+    onHostAction: async ({ action }) => {
+      if (action.type === "openThread")
+        return () => {
+          completed.push(action.sessionId);
+        };
+    },
+  });
+  try {
+    await owner.replaceRuntime({
+      target,
+      generation: "one",
+      extensions: [{ resolvedPath: data.source }],
+      declarations: [data.declaration],
+    });
+    const view = owner.listViews(target)[0]!;
+    const open = (senderId: number) =>
+      owner.openConnection(
+        { target, extensionId: view.extensionId, viewId: view.id, senderId },
+        () => {},
+      );
+    const first = await open(1);
+    const second = await open(1);
+    const action = (sessionId: string) => ({ type: "openThread" as const, sessionId });
+    const ack = { type: "host-action-ack", requestId: "one" };
+    expect(await owner.invokeHostAction(first.connectionId, 1, action("first"), "one")).toBe(true);
+    expect(await owner.invokeHostAction(second.connectionId, 1, action("second"), "one")).toBe(
+      true,
+    );
+    expect(completed).toEqual([]);
+    await expect(owner.receive(first.connectionId, 2, ack)).rejects.toThrow("another window");
+    await owner.receive(first.connectionId, 1, { ...ack, requestId: "unrelated" });
+    expect(completed).toEqual([]);
+    await owner.receive(second.connectionId, 1, ack);
+    expect(completed).toEqual(["second"]);
+    await owner.receive(first.connectionId, 1, ack);
+    await owner.receive(first.connectionId, 1, ack);
+    expect(completed).toEqual(["second", "first"]);
+    await owner.invokeHostAction(first.connectionId, 1, action("closed"), "late");
+    owner.closeConnection(first.connectionId, 1);
+    await expect(
+      owner.receive(first.connectionId, 1, { ...ack, requestId: "late" }),
+    ).rejects.toThrow("unavailable");
+    expect(completed).toEqual(["second", "first"]);
+  } finally {
+    await owner.dispose();
+    await rm(data.directory, { recursive: true, force: true });
+  }
+});
+
+test("concurrent deferred host actions keep their connection's result limit and request identity", async () => {
+  const data = await fixture();
+  let release!: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+  const owner = new DesktopExtensionViewOwner({
+    frameDocument: () => "",
+    onHostAction: async () => {
+      await gate;
+      return () => {};
+    },
+  });
+  try {
+    await owner.replaceRuntime({
+      target,
+      generation: "one",
+      extensions: [{ resolvedPath: data.source }],
+      declarations: [data.declaration],
+    });
+    const view = owner.listViews(target)[0]!;
+    const connection = await owner.openConnection(
+      { target, extensionId: view.extensionId, viewId: view.id, senderId: 1 },
+      () => {},
+    );
+    const action = { type: "openThread" as const, sessionId: "earlier" };
+    const pending = Promise.allSettled(
+      Array.from({ length: 33 }, (_, i) =>
+        owner.invokeHostAction(connection.connectionId, 1, action, String(i)),
+      ),
+    );
+    release();
+    const results = await pending;
+    expect(results.filter(({ status }) => status === "fulfilled")).toHaveLength(32);
+    expect(results.filter(({ status }) => status === "rejected")).toHaveLength(1);
+    await owner.receive(connection.connectionId, 1, { type: "host-action-ack", requestId: "0" });
+    const duplicate = await Promise.allSettled([
+      owner.invokeHostAction(connection.connectionId, 1, action, "same"),
+      owner.invokeHostAction(connection.connectionId, 1, action, "same"),
+    ]);
+    expect(duplicate.map(({ status }) => status).sort()).toEqual(["fulfilled", "rejected"]);
+  } finally {
+    await owner.dispose();
+    await rm(data.directory, { recursive: true, force: true });
+  }
+});

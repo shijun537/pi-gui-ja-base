@@ -55,7 +55,12 @@ window.addEventListener('message', async (event) => {
       const request = pending.get(data.requestId);
       if (!request) return;
       pending.delete(data.requestId);
-      if (data.ok === true) request.resolve();
+      if (data.ok === true) {
+        request.resolve();
+        // Promise reactions registered by the view run before navigation can close its frame.
+        if (data.acknowledge === true)
+          queueMicrotask(() => port.postMessage({type:'host-action-ack',requestId:data.requestId}));
+      }
       else request.reject(new Error(typeof data.error === 'string' ? data.error : 'The action could not be completed'));
     } else connection.receive(data);
   };

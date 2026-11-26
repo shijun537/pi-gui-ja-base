@@ -6,6 +6,11 @@ on:
     branches: [main]
     paths:
       - .github/workflows/extension-links-diagnostic.yml
+      - apps/desktop/electron/extensions/extension-frame-document.ts
+      - apps/desktop/electron/extensions/extension-view-actions.ts
+      - apps/desktop/electron/extensions/extension-view-owner.ts
+      - apps/desktop/electron/ipc/extension-view-requests.ts
+      - apps/desktop/tests/core/extension-view-links.spec.ts
 
 permissions:
   contents: read

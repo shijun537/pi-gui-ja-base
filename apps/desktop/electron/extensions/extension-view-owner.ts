@@ -51,7 +51,7 @@ export interface DesktopExtensionViewOwnerOptions {
   readonly hostAssets?: Readonly<Record<string, DesktopExtensionHostAsset>>;
   readonly onHostAction: (
     context: DesktopExtensionConnectionContext & { readonly action: DesktopHostAction },
-  ) => Promise<void>;
+  ) => Promise<void | (() => void)>;
   readonly onDiagnostic?: (target: SessionRef, source: string, message: string) => void;
   readonly activationTimeoutMs?: number;
 }
@@ -81,6 +81,7 @@ interface ConnectionEntry {
   readonly assets: ValidatedDesktopExtensionSource;
   readonly send: (message: unknown) => void;
   readonly transport: ReturnType<typeof createChordServerConnection>;
+  readonly afterActionResult: Map<string, () => void>;
 }
 
 function messageOf(error: unknown): string {
@@ -226,6 +227,7 @@ export class DesktopExtensionViewOwner {
       assets: view.assets,
       send,
       transport,
+      afterActionResult: new Map(),
     });
     return { connectionId, frameUrl: `${DESKTOP_EXTENSION_SCHEME}://${connectionId}/` };
   }
@@ -237,6 +239,24 @@ export class DesktopExtensionViewOwner {
 
   async receive(connectionId: string, senderId: number, message: unknown): Promise<void> {
     const connection = this.requireConnection(connectionId, senderId);
+    if (
+      typeof message === "object" &&
+      message !== null &&
+      "type" in message &&
+      message.type === "host-action-ack"
+    ) {
+      if (
+        !("requestId" in message) ||
+        typeof message.requestId !== "string" ||
+        !message.requestId ||
+        message.requestId.length > 200
+      )
+        throw new Error("Invalid host action request ID");
+      const afterResult = connection.afterActionResult.get(message.requestId);
+      connection.afterActionResult.delete(message.requestId);
+      afterResult?.();
+      return;
+    }
     await connection.transport.receive(message);
     if (
       typeof message === "object" &&
@@ -252,9 +272,24 @@ export class DesktopExtensionViewOwner {
     connectionId: string,
     senderId: number,
     action: DesktopHostAction,
-  ): Promise<void> {
+    requestId?: string,
+  ): Promise<boolean> {
+    const connection = this.requireConnection(connectionId, senderId);
+    if (
+      connection.afterActionResult.size >= 32 ||
+      (requestId !== undefined && connection.afterActionResult.has(requestId))
+    )
+      throw new Error("Too many pending desktop actions. Wait for the current actions to finish.");
     const context = this.getConnectionContext(connectionId, senderId);
-    await this.options.onHostAction({ ...context, action });
+    const afterResult = await this.options.onHostAction({ ...context, action });
+    if (!afterResult) return false;
+    if (!requestId) throw new Error("Missing host action request ID");
+    this.requireConnection(connectionId, senderId);
+    // Concurrent calls may all pass the first check before their host action resolves.
+    if (connection.afterActionResult.size >= 32 || connection.afterActionResult.has(requestId))
+      throw new Error("Too many pending desktop actions. Wait for the current actions to finish.");
+    connection.afterActionResult.set(requestId, afterResult);
+    return true;
   }
 
   closeConnection(connectionId: string, senderId: number): void {
@@ -473,6 +508,7 @@ export class DesktopExtensionViewOwner {
 
   private close(connection: ConnectionEntry, reason: string): void {
     this.connections.delete(connection.context.connectionId);
+    connection.afterActionResult.clear();
     connection.transport.close(reason);
     try {
       connection.send({ type: "closed", reason });

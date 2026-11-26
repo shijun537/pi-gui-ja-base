@@ -109,14 +109,26 @@ export function registerExtensionViewRequests(
       return;
     }
     pending.add(requestId);
-    let result: { type: "host-action-result"; requestId: string; ok: boolean; error?: string };
+    let result: {
+      type: "host-action-result";
+      requestId: string;
+      ok: boolean;
+      acknowledge?: boolean;
+      error?: string;
+    };
     try {
-      await owner.invokeHostAction(
+      const acknowledge = await owner.invokeHostAction(
         connectionId,
         contents.id,
         parseDesktopHostAction(message.action),
+        requestId,
       );
-      result = { type: "host-action-result", requestId, ok: true };
+      result = {
+        type: "host-action-result",
+        requestId,
+        ok: true,
+        ...(acknowledge ? { acknowledge: true } : {}),
+      };
     } catch (error) {
       result = {
         type: "host-action-result",
